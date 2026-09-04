@@ -1,6 +1,6 @@
 # Cinemapedia
 
-A Flutter movie-browsing app built on top of [The Movie DB (TMDB)](https://www.themoviedb.org/) API, using Riverpod for state management, go_router for navigation, and Dio for networking.
+A Flutter movie-browsing app built on top of [The Movie DB (TMDB)](https://www.themoviedb.org/) API, using Riverpod for state management, go_router for navigation, and Dio for networking. The home screen shows a slideshow plus horizontally scrolling, paginated lists for now-playing, popular, upcoming, and top-rated movies.
 
 ## Getting started
 
@@ -35,7 +35,7 @@ The code under `lib/` follows a layered structure:
 
 - `domain/` — entities and abstract datasource/repository interfaces, no external dependencies.
 - `infrastructure/` — concrete implementations: TMDB datasource (Dio), response/model classes, mappers to domain entities, and repository implementations.
-- `presentation/` — screens and Riverpod providers, organized per feature.
-- `config/` — app-wide setup: router, theme, environment.
+- `presentation/` — screens, reusable widgets, and Riverpod providers, organized per feature.
+- `config/` — app-wide setup: router, theme, environment, small helpers (e.g. number formatting).
 
 Data flows: datasource (TMDB) → mapper → domain entity → repository → Riverpod provider → screen.

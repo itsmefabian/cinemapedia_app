@@ -1,6 +1,6 @@
 # Cinemapedia
 
-A Flutter movie-browsing app built on top of [The Movie DB (TMDB)](https://www.themoviedb.org/) API, using Riverpod for state management, go_router for navigation, and Dio for networking. The home screen shows a slideshow plus horizontally scrolling, paginated lists for now-playing, popular, upcoming, and top-rated movies.
+A Flutter movie-browsing app built on top of [The Movie DB (TMDB)](https://www.themoviedb.org/) API, using Riverpod for state management, go_router for navigation, and Dio for networking. The home screen shows a slideshow plus horizontally scrolling, paginated lists for now-playing, popular, upcoming, and top-rated movies; tapping a movie navigates to a details screen.
 
 ## Getting started
 

@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia_app/config/helpers/formats.dart';
 import 'package:cinemapedia_app/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HorizontalListView extends StatefulWidget {
   final List<Movie> movies;
@@ -89,12 +90,21 @@ class _Slide extends StatelessWidget {
                 movie.posterPath,
                 fit: BoxFit.cover,
                 width: 150,
-                loadingBuilder: (context, child, loadingProgress) =>
-                    loadingProgress != null
-                    ? const Center(
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress != null) {
+                    return const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Center(
                         child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : FadeIn(child: child),
+                      ),
+                    );
+                  }
+
+                  return GestureDetector(
+                    child: FadeIn(child: child),
+                    onTap: () => context.push('/movie/${movie.id}'),
+                  );
+                },
               ),
             ),
           ),

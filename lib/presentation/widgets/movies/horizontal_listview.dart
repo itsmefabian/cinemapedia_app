@@ -1,7 +1,9 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:cinemapedia_app/config/const/assets.dart';
 import 'package:cinemapedia_app/config/helpers/formats.dart';
 import 'package:cinemapedia_app/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 class HorizontalListView extends StatefulWidget {
@@ -86,26 +88,35 @@ class _Slide extends StatelessWidget {
             width: 150,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.network(
-                movie.posterPath,
-                fit: BoxFit.cover,
-                width: 150,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress != null) {
-                    return const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Center(
-                        child: CircularProgressIndicator(strokeWidth: 2),
+              child: movie.posterPath == Assets.noImagePath
+                  ? GestureDetector(
+                      onTap: () => context.push('/movie/${movie.id}'),
+                      child: SvgPicture.asset(
+                        Assets.noImagePath,
+                        fit: BoxFit.cover,
+                        width: 150,
                       ),
-                    );
-                  }
+                    )
+                  : Image.network(
+                      movie.posterPath,
+                      fit: BoxFit.cover,
+                      width: 150,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress != null) {
+                          return const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Center(
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          );
+                        }
 
-                  return GestureDetector(
-                    child: FadeIn(child: child),
-                    onTap: () => context.push('/movie/${movie.id}'),
-                  );
-                },
-              ),
+                        return GestureDetector(
+                          child: FadeIn(child: child),
+                          onTap: () => context.push('/movie/${movie.id}'),
+                        );
+                      },
+                    ),
             ),
           ),
           SizedBox(height: 5),

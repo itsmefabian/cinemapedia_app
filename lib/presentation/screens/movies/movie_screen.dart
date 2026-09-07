@@ -1,8 +1,10 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:cinemapedia_app/config/const/assets.dart';
 import 'package:cinemapedia_app/domain/entities/movie.dart';
 import 'package:cinemapedia_app/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
   static const name = 'movie-screen';
@@ -69,25 +71,24 @@ class _CustomSliverAppBar extends StatelessWidget {
       expandedHeight: size.height * 0.7,
       foregroundColor: Colors.white,
       flexibleSpace: FlexibleSpaceBar(
-        titlePadding: const EdgeInsets.only(bottom: 0),
-        expandedTitleScale: 1.0,
-        title: Text(
-          movie.title,
-          style: const TextStyle(fontSize: 20),
-          textAlign: TextAlign.start,
-        ),
         background: Stack(
           children: [
             SizedBox.expand(
-              child: Image.network(
-                movie.backdropPath,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress != null) return SizedBox();
-                  return FadeIn(child: child);
-                },
-              ),
+              child: movie.backdropPath == Assets.noImagePath
+                  ? SvgPicture.asset(Assets.noImagePath, fit: BoxFit.cover)
+                  : Image.network(
+                      movie.backdropPath,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress != null) {
+                          return const SizedBox();
+                        }
+
+                        return FadeIn(child: child);
+                      },
+                    ),
             ),
+
             const SizedBox.expand(
               child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -100,15 +101,32 @@ class _CustomSliverAppBar extends StatelessWidget {
                 ),
               ),
             ),
+
             const SizedBox.expand(
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
-
+                    end: Alignment.bottomRight,
                     stops: [0.0, 0.3],
                     colors: [Colors.black87, Colors.transparent],
                   ),
+                ),
+              ),
+            ),
+
+            Positioned(
+              left: 16,
+              right: 16,
+              bottom: 20,
+              child: Text(
+                movie.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -140,7 +158,12 @@ class _MovieDetails extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.network(movie.posterPath, width: size.width * 0.3),
+                child: movie.posterPath == Assets.noImagePath
+                    ? SvgPicture.asset(
+                        Assets.noImagePath,
+                        width: size.width * 0.3,
+                      )
+                    : Image.network(movie.posterPath, width: size.width * 0.3),
               ),
               const SizedBox(width: 10),
               SizedBox(

@@ -1,7 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:cinemapedia_app/config/const/assets.dart';
 import 'package:cinemapedia_app/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SlideShow extends StatelessWidget {
   final List<Movie> movies;
@@ -52,16 +54,18 @@ class _Slide extends StatelessWidget {
         decoration: decoration,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
-          child: Image.network(
-            movie.backdropPath,
-            fit: BoxFit.cover,
-            loadingBuilder: (context, child, loadingProgress) =>
-                loadingProgress != null
-                ? const DecoratedBox(
-                    decoration: BoxDecoration(color: Colors.black12),
-                  )
-                : FadeIn(child: child),
-          ),
+          child: movie.backdropPath == Assets.noImagePath
+              ? SvgPicture.asset(Assets.noImagePath, fit: BoxFit.cover)
+              : Image.network(
+                  movie.backdropPath,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) =>
+                      loadingProgress != null
+                      ? const DecoratedBox(
+                          decoration: BoxDecoration(color: Colors.black12),
+                        )
+                      : FadeIn(child: child),
+                ),
         ),
       ),
     );

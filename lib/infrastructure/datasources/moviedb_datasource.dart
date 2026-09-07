@@ -72,4 +72,18 @@ class MoviedbDatasource extends MoviesDatasource {
       MovieDetails.fromJson(response.data),
     );
   }
+
+  @override
+  Future<List<Movie>> searchMovie(String query) async {
+    if (query.isEmpty) return [];
+
+    final response = await dio.get(
+      '/search/movie',
+      queryParameters: {'query': query},
+    );
+
+    if (response.statusCode != 200) throw Exception('Movie $query not found');
+
+    return _jsonToMovies(response.data);
+  }
 }

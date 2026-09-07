@@ -15,14 +15,14 @@ class MovieDetails {
   final String posterPath;
   final List<ProductionCompany> productionCompanies;
   final List<ProductionCountry> productionCountries;
-  final DateTime releaseDate;
+  final DateTime? releaseDate;
   final int revenue;
   final int runtime;
   final bool softcore;
   final List<SpokenLanguage> spokenLanguages;
   final String status;
   final String tagline;
-  final String title;
+  final String? title;
   final bool video;
   final double voteAverage;
   final int voteCount;
@@ -44,14 +44,14 @@ class MovieDetails {
     required this.posterPath,
     required this.productionCompanies,
     required this.productionCountries,
-    required this.releaseDate,
+    this.releaseDate,
     required this.revenue,
     required this.runtime,
     required this.softcore,
     required this.spokenLanguages,
     required this.status,
     required this.tagline,
-    required this.title,
+    this.title,
     required this.video,
     required this.voteAverage,
     required this.voteCount,
@@ -80,7 +80,9 @@ class MovieDetails {
     productionCountries: List<ProductionCountry>.from(
       json["production_countries"].map((x) => ProductionCountry.fromJson(x)),
     ),
-    releaseDate: DateTime.parse(json["release_date"]),
+    releaseDate: json["release_date"] != ''
+        ? DateTime.parse(json["release_date"])
+        : null,
     revenue: json["revenue"],
     runtime: json["runtime"],
     softcore: json["softcore"],
@@ -117,7 +119,7 @@ class MovieDetails {
       productionCountries.map((x) => x.toJson()),
     ),
     "release_date":
-        "${releaseDate.year.toString().padLeft(4, '0')}-${releaseDate.month.toString().padLeft(2, '0')}-${releaseDate.day.toString().padLeft(2, '0')}",
+        "${releaseDate?.year.toString().padLeft(4, '0')}-${releaseDate?.month.toString().padLeft(2, '0')}-${releaseDate?.day.toString().padLeft(2, '0')}",
     "revenue": revenue,
     "runtime": runtime,
     "softcore": softcore,

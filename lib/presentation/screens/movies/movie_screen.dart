@@ -235,12 +235,19 @@ class _ActorsByMovie extends ConsumerWidget {
                 FadeInRight(
                   child: ClipRRect(
                     borderRadius: BorderRadiusGeometry.circular(20),
-                    child: Image.network(
-                      actor.photoPath,
-                      height: 180,
-                      width: 135,
-                      fit: BoxFit.cover,
-                    ),
+                    child: actor.photoPath == Assets.noProfilePath
+                        ? SvgPicture.asset(
+                            Assets.noProfilePath,
+                            height: 180,
+                            width: 135,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.network(
+                            actor.photoPath,
+                            height: 180,
+                            width: 135,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 ),
                 const SizedBox(height: 5),

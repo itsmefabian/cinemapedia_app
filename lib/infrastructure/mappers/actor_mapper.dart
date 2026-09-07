@@ -1,3 +1,4 @@
+import 'package:cinemapedia_app/config/const/assets.dart';
 import 'package:cinemapedia_app/domain/entities/actor.dart';
 import 'package:cinemapedia_app/infrastructure/models/moviedb/credits_response.dart';
 
@@ -7,7 +8,7 @@ class ActorMapper {
     name: cast.name,
     photoPath: cast.profilePath != null
         ? 'https://image.tmdb.org/t/p/w500/${cast.profilePath}'
-        : 'https://pixabay.com/images/download/wanderercreative-blank-profile-picture-973460_1920.png',
+        : Assets.noProfilePath,
     character: cast.character,
   );
 }

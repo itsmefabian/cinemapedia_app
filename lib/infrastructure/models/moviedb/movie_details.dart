@@ -138,13 +138,13 @@ class MovieDetails {
 class BelongsToCollection {
   final int id;
   final String name;
-  final String posterPath;
+  final String? posterPath;
   final String? backdropPath;
 
   BelongsToCollection({
     required this.id,
     required this.name,
-    required this.posterPath,
+    this.posterPath,
     this.backdropPath,
   });
 

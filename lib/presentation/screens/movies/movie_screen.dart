@@ -57,19 +57,38 @@ class _MovieScreenState extends ConsumerState<MovieScreen> {
   }
 }
 
-class _CustomSliverAppBar extends StatelessWidget {
+class _CustomSliverAppBar extends ConsumerWidget {
   final Movie movie;
 
   const new({required this.movie});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
+    final isFavoriteFuture = ref.watch(isFavoriteMovieProvider(movie.id));
 
     return SliverAppBar(
       backgroundColor: Colors.black,
       expandedHeight: size.height * 0.7,
       foregroundColor: Colors.white,
+      actions: [
+        IconButton(
+          onPressed: () async {
+            await ref.read(favoriteMoviesProvider.notifier).toggle(movie);
+            ref.invalidate(isFavoriteMovieProvider(movie.id));
+          },
+
+          icon: isFavoriteFuture.when(
+            data: (isFavorite) => isFavorite
+                ? const Icon(Icons.favorite, color: Colors.red)
+                : const Icon(Icons.favorite_border_outlined),
+            error: (_, _) => throw Exception('Error loading favorite movies'),
+            loading: () => const CircularProgressIndicator(strokeWidth: 2),
+          ),
+
+          // Icon(Icons.favorite_border_outlined, color: Colors.red),
+        ),
+      ],
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           children: [
@@ -81,7 +100,24 @@ class _CustomSliverAppBar extends StatelessWidget {
                       fit: BoxFit.cover,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress != null) {
-                          return const SizedBox();
+                          final expected = loadingProgress.expectedTotalBytes;
+                          final loaded = loadingProgress.cumulativeBytesLoaded;
+
+                          return Container(
+                            color: Colors.grey.shade900,
+                            alignment: Alignment.center,
+                            child: SizedBox(
+                              width: 28,
+                              height: 28,
+                              child: CircularProgressIndicator(
+                                value: expected != null
+                                    ? loaded / expected
+                                    : null,
+                                strokeWidth: 2,
+                                color: Colors.white54,
+                              ),
+                            ),
+                          );
                         }
 
                         return FadeIn(child: child);
@@ -89,30 +125,25 @@ class _CustomSliverAppBar extends StatelessWidget {
                     ),
             ),
 
-            const SizedBox.expand(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [0.7, 1.0],
-                    colors: [Colors.transparent, Colors.black87],
-                  ),
-                ),
-              ),
+            const _CustomGradient(
+              alignmentBegin: Alignment.topCenter,
+              alignmentEnd: Alignment.bottomCenter,
+              stops: [0.8, 1.0],
+              colors: [Colors.transparent, Colors.black38],
             ),
 
-            const SizedBox.expand(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    stops: [0.0, 0.3],
-                    colors: [Colors.black87, Colors.transparent],
-                  ),
-                ),
-              ),
+            const _CustomGradient(
+              alignmentBegin: Alignment.topLeft,
+              alignmentEnd: Alignment.bottomRight,
+              stops: [0.0, 0.2],
+              colors: [Colors.black87, Colors.transparent],
+            ),
+
+            const _CustomGradient(
+              alignmentBegin: Alignment.topRight,
+              alignmentEnd: Alignment.bottomLeft,
+              stops: [0.0, 0.4],
+              colors: [Colors.black87, Colors.transparent],
             ),
 
             Positioned(
@@ -264,6 +295,36 @@ class _ActorsByMovie extends ConsumerWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _CustomGradient extends StatelessWidget {
+  final AlignmentGeometry alignmentBegin;
+  final AlignmentGeometry alignmentEnd;
+  final List<double> stops;
+  final List<Color> colors;
+
+  const new({
+    required this.alignmentBegin,
+    required this.alignmentEnd,
+    required this.stops,
+    required this.colors,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: alignmentBegin,
+            end: alignmentEnd,
+            stops: stops,
+            colors: colors,
+          ),
+        ),
       ),
     );
   }

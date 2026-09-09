@@ -16,7 +16,7 @@ A Flutter movie-browsing app built on top of [The Movie DB (TMDB)](https://www.t
    API_KEY=<your_tmdb_api_key>
    ```
 
-3. Run the app:
+3. Run the app (Android, iOS, and Windows are supported):
 
    ```
    flutter run

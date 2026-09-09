@@ -3,7 +3,6 @@ import 'package:cinemapedia_app/config/const/assets.dart';
 import 'package:cinemapedia_app/config/helpers/formats.dart';
 import 'package:cinemapedia_app/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 class HorizontalListView extends StatefulWidget {
@@ -91,7 +90,7 @@ class _Slide extends StatelessWidget {
               child: movie.posterPath == Assets.noImagePath
                   ? GestureDetector(
                       onTap: () => context.push('/movie/${movie.id}'),
-                      child: SvgPicture.asset(
+                      child: Image.asset(
                         Assets.noImagePath,
                         fit: BoxFit.cover,
                         width: 150,

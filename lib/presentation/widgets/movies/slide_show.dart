@@ -5,7 +5,6 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:cinemapedia_app/config/const/assets.dart';
 import 'package:cinemapedia_app/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class SlideShow extends StatefulWidget {
   final List<Movie> movies;
@@ -86,7 +85,7 @@ class _Slide extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: movie.backdropPath == Assets.noImagePath
-              ? SvgPicture.asset(Assets.noImagePath, fit: BoxFit.cover)
+              ? Image.asset(Assets.noImagePath, fit: BoxFit.cover)
               : Image.network(
                   movie.backdropPath,
                   fit: BoxFit.cover,

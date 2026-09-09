@@ -5,7 +5,6 @@ import 'package:cinemapedia_app/presentation/providers/providers.dart';
 import 'package:cinemapedia_app/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
   static const name = 'movie-screen';
@@ -85,7 +84,7 @@ class _CustomSliverAppBar extends ConsumerWidget {
                 ? const Icon(Icons.favorite, color: Colors.red)
                 : const Icon(Icons.favorite_border_outlined),
             error: (_, _) => throw Exception('Error loading favorite movies'),
-            loading: () => const CircularProgressIndicator(strokeWidth: 2),
+            loading: () => SizedBox(),
           ),
 
           // Icon(Icons.favorite_border_outlined, color: Colors.red),
@@ -96,7 +95,7 @@ class _CustomSliverAppBar extends ConsumerWidget {
           children: [
             SizedBox.expand(
               child: movie.backdropPath == Assets.noImagePath
-                  ? SvgPicture.asset(Assets.noImagePath, fit: BoxFit.cover)
+                  ? Image.asset(Assets.noImagePath, fit: BoxFit.cover)
                   : Image.network(
                       movie.backdropPath,
                       fit: BoxFit.cover,
@@ -192,7 +191,7 @@ class _MovieDetails extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: movie.posterPath == Assets.noImagePath
-                    ? SvgPicture.asset(
+                    ? Image.asset(
                         Assets.noImagePath,
                         width: size.width * 0.3,
                       )
@@ -270,7 +269,7 @@ class _ActorsByMovie extends ConsumerWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadiusGeometry.circular(20),
                     child: actor.photoPath == Assets.noProfilePath
-                        ? SvgPicture.asset(
+                        ? Image.asset(
                             Assets.noProfilePath,
                             height: 180,
                             width: 135,

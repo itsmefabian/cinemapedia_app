@@ -5,7 +5,6 @@ import 'package:cinemapedia_app/config/const/assets.dart';
 import 'package:cinemapedia_app/config/helpers/formats.dart';
 import 'package:cinemapedia_app/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 typedef SearchMoviesCallback = Future<List<Movie>> Function(String);
 
@@ -79,19 +78,19 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
           //   );
           // }
           if (snapshot.data ?? false) {
-            return const Padding(
-              padding: EdgeInsets.all(12),
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
+            return SpinPerfect(
+              duration: const Duration(seconds: 20),
+              spins: 10,
+              infinite: true,
+              child: IconButton(
+                onPressed: () => query = '',
+                icon: Icon(Icons.refresh_rounded),
               ),
             );
           }
 
           return FadeIn(
             animate: query.isNotEmpty,
-            duration: const Duration(milliseconds: 100),
             child: IconButton(
               onPressed: () => query = '',
               icon: const Icon(Icons.clear),
@@ -137,53 +136,54 @@ class _MovieItem extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return GestureDetector(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Row(
-          children: [
-            SizedBox(
-              width: size.width * 0.2,
-              child: ClipRRect(
-                borderRadius: BorderRadiusGeometry.circular(20),
-                child: movie.posterPath == Assets.noImagePath
-                    ? SvgPicture.asset(Assets.noImagePath)
-                    : Image.network(
-                        movie.posterPath,
-                        loadingBuilder: (context, child, loadingProgress) =>
-                            FadeIn(child: child),
-                      ),
-              ),
-            ),
-            const SizedBox(width: 10),
-
-            SizedBox(
-              width: size.width * 0.7,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(movie.title, style: textStyles.titleMedium),
-                  (movie.overview.length > 100)
-                      ? Text('${movie.overview.substring(0, 100)}...')
-                      : Text(movie.overview),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.star_half_rounded,
-                        color: Colors.yellow.shade800,
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        Formats.number(movie.voteAverage, 1),
-                        style: textStyles.bodyMedium!.copyWith(
-                          color: Colors.yellow.shade900,
-                        ),
-                      ),
-                    ],
+      child: FadeIn(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: Row(
+            children: [
+              SizedBox(
+                width: size.width * 0.2,
+                child: ClipRRect(
+                  borderRadius: BorderRadiusGeometry.circular(10),
+                  child: FadeInImage(
+                    height: 130,
+                    fit: BoxFit.cover,
+                    image: NetworkImage(movie.posterPath),
+                    placeholder: const AssetImage(Assets.noImagePath),
                   ),
-                ],
+                ),
               ),
-            ),
-          ],
+              const SizedBox(width: 10),
+
+              SizedBox(
+                width: size.width * 0.7,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(movie.title, style: textStyles.titleMedium),
+                    (movie.overview.length > 100)
+                        ? Text('${movie.overview.substring(0, 100)}...')
+                        : Text(movie.overview),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.star_half_rounded,
+                          color: Colors.yellow.shade800,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          Formats.number(movie.voteAverage, 1),
+                          style: textStyles.bodyMedium!.copyWith(
+                            color: Colors.yellow.shade900,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       onTap: () => onMovieSelected(context, movie),

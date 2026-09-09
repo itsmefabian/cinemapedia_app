@@ -36,7 +36,7 @@ class _FavoritesViewState extends ConsumerState<FavoritesView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.favorite_border, size: 100, color: colorPrimary),
+              Icon(Icons.favorite_border_sharp, size: 50, color: colorPrimary),
               const Text('Empty list', style: TextStyle(color: Colors.grey)),
             ],
           ),

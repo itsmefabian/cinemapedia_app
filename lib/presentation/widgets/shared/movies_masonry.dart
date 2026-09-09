@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import 'package:animate_do/animate_do.dart';
+import 'package:cinemapedia_app/config/const/assets.dart';
 import 'package:cinemapedia_app/domain/entities/movie.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -81,11 +85,22 @@ class _MoviePostLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => context.push('movie/${movie.id}'),
-      child: ClipRRect(
-        borderRadius: BorderRadiusGeometry.circular(20),
-        child: Image.network(movie.posterPath),
+    final random = Random();
+
+    return FadeInUp(
+      from: random.nextInt(100) + 80,
+      delay: Duration(microseconds: random.nextInt(450) + 0),
+      child: GestureDetector(
+        onTap: () => context.push('movie/${movie.id}'),
+        child: ClipRRect(
+          borderRadius: BorderRadiusGeometry.circular(20),
+          child: FadeInImage(
+            height: 180,
+            fit: BoxFit.cover,
+            placeholder: const AssetImage(Assets.noImagePath),
+            image: NetworkImage(movie.posterPath),
+          ),
+        ),
       ),
     );
   }

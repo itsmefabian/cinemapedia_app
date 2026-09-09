@@ -27,7 +27,15 @@ final appRouter = GoRouter(
             ),
           ],
         ),
-
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/popular',
+              name: PopularView.name,
+              builder: (context, state) => const PopularView(),
+            ),
+          ],
+        ),
         StatefulShellBranch(
           routes: [
             GoRoute(

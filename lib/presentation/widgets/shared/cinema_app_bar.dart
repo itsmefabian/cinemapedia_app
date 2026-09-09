@@ -23,7 +23,7 @@ class CinemaAppBar extends ConsumerWidget {
               Icon(Icons.movie_outlined, color: colors.primary),
               const SizedBox(width: 5),
               Text('Cinemapedia', style: titleStyle),
-              Spacer(),
+              const Spacer(),
               IconButton(
                 onPressed: () {
                   final searchedRepository = ref.read(searchedMoviesProvider);

@@ -20,8 +20,8 @@ class MoviesNotifier extends Notifier<List<Movie>> {
     return [];
   }
 
-  Future<void> loadNextPage() async {
-    if (isLoading) return;
+  Future<List<Movie>> loadNextPage() async {
+    if (isLoading) return [];
     isLoading = true;
     currentPage++;
 
@@ -29,6 +29,8 @@ class MoviesNotifier extends Notifier<List<Movie>> {
     state = [...state, ...movies];
     await Future.delayed(const Duration(milliseconds: 300));
     isLoading = false;
+
+    return movies;
   }
 }
 

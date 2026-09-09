@@ -14,9 +14,7 @@ class TrailerFromMovie extends ConsumerWidget {
     final videos = ref.watch(videoInfoProvider)[movieId];
 
     if (videos == null) {
-      return const Center(
-        child: CircularProgressIndicator(strokeWidth: 2),
-      );
+      return const Center(child: CircularProgressIndicator(strokeWidth: 2));
     }
 
     return _VideosList(videos: videos);
@@ -30,7 +28,6 @@ class _VideosList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //* Nada que mostrar
     if (videos.isEmpty) {
       return const SizedBox();
     }
@@ -67,6 +64,7 @@ class _YouTubeVideoPlayer extends StatefulWidget {
 
 class _YouTubeVideoPlayerState extends State<_YouTubeVideoPlayer> {
   late YoutubePlayerController _controller;
+  bool _isTabActive = true;
 
   @override
   void initState() {
@@ -82,6 +80,17 @@ class _YouTubeVideoPlayerState extends State<_YouTubeVideoPlayer> {
         loop: false,
       ),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final isTabActive = TickerMode.valuesOf(context).enabled;
+    if (_isTabActive && !isTabActive) {
+      _controller.pauseVideo();
+    }
+    _isTabActive = isTabActive;
   }
 
   @override

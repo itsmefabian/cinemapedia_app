@@ -1,6 +1,6 @@
 # Cinemapedia
 
-A Flutter movie-browsing app built on top of [The Movie DB (TMDB)](https://www.themoviedb.org/) API, using Riverpod for state management, go_router for navigation, Dio for networking, and a local Drift (SQLite) database for favorites. The app has a bottom-navigation shell with a Home tab (a slideshow plus horizontally scrolling, paginated lists for now-playing, popular, upcoming, and top-rated movies) and a Favorites tab (a masonry grid of movies saved locally). Tapping a movie opens a details screen with its cast, trailer, similar movies, and a favorite toggle, and the search icon opens a debounced movie search.
+A Flutter movie-browsing app built on top of [The Movie DB (TMDB)](https://www.themoviedb.org/) API, using Riverpod for state management, go_router for navigation, Dio for networking, and a local Drift (SQLite) database for favorites and settings. The app has a bottom-navigation shell with four tabs: Home (a slideshow plus horizontally scrolling, paginated lists for now-playing, popular, upcoming, and top-rated movies), Popular (a masonry grid), Favorites (a masonry grid of movies saved locally), and Settings (a dark-mode toggle, persisted locally). Tapping a movie opens a details screen with its cast, trailer, reviews, similar movies, and a favorite toggle, and the search icon opens a debounced movie search.
 
 ## Getting started
 
@@ -32,11 +32,11 @@ dart run build_runner build --delete-conflicting-outputs    # regenerate the loc
 
 ## Architecture
 
-The code under `lib/` follows a layered structure, with parallel movies, actors, videos, and local-storage (favorites) domains plus search and similar-movies features:
+The code under `lib/` follows a layered structure, with parallel movies, actors, videos, reviews, and local-storage (favorites/settings) domains plus search and similar-movies features:
 
 - `domain/` — entities and abstract datasource/repository interfaces, no external dependencies.
-- `infrastructure/` — concrete implementations: TMDB datasources (Dio), a Drift datasource for favorites, response/model classes, mappers to domain entities, and repository implementations.
+- `infrastructure/` — concrete implementations: TMDB datasources (Dio), a Drift datasource for favorites and settings, response/model classes, mappers to domain entities, and repository implementations.
 - `presentation/` — screens (including the bottom-nav shell), per-tab views, reusable widgets, a search delegate, and Riverpod providers, organized per feature.
-- `config/` — app-wide setup: router, theme, environment, static asset paths, small helpers (e.g. number formatting), and the Drift database schema.
+- `config/` — app-wide setup: router, light/dark theme, environment, static asset paths, small helpers (e.g. number formatting), and the Drift database schema.
 
 Data flows: datasource (TMDB) → mapper → domain entity → repository → Riverpod provider → screen.

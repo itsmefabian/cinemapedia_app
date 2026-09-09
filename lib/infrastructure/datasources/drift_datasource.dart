@@ -77,33 +77,31 @@ class DriftDatasource extends LocalStorageDatasource {
         );
   }
 
-  Future<AppSettingsData> _getOrCreateSettings() async {
+  @override
+  Future<bool?> getDarkModePreference() async {
     final settings = await database
         .select(database.appSettings)
         .getSingleOrNull();
-    if (settings != null) return settings;
-
-    final id = await database
-        .into(database.appSettings)
-        .insert(const AppSettingsCompanion());
-
-    return AppSettingsData(id: id, isDarkMode: false);
+    return settings?.isDarkMode;
   }
 
   @override
-  Future<bool> isDarkMode() async {
-    final settings = await _getOrCreateSettings();
-    return settings.isDarkMode;
-  }
+  Future<void> setDarkModePreference(bool isDarkMode) async {
+    final settings = await database
+        .select(database.appSettings)
+        .getSingleOrNull();
 
-  @override
-  Future<void> toggleDarkMode() async {
-    final settings = await _getOrCreateSettings();
+    if (settings == null) {
+      await database
+          .into(database.appSettings)
+          .insert(
+            AppSettingsCompanion.insert(isDarkMode: drift.Value(isDarkMode)),
+          );
+      return;
+    }
 
-    await (database.update(
-      database.appSettings,
-    )..where((table) => table.id.equals(settings.id))).write(
-      AppSettingsCompanion(isDarkMode: drift.Value(!settings.isDarkMode)),
-    );
+    await (database.update(database.appSettings)
+          ..where((table) => table.id.equals(settings.id)))
+        .write(AppSettingsCompanion(isDarkMode: drift.Value(isDarkMode)));
   }
 }

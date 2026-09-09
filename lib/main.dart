@@ -23,16 +23,18 @@ class _MainAppState extends ConsumerState<MainApp> {
   @override
   void initState() {
     super.initState();
-    ref.read(isDarkModeProvider.notifier).loadDarkMode();
+    ref.read(themeModeProvider.notifier).loadThemeMode();
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = ref.watch(isDarkModeProvider);
+    final themeMode = ref.watch(themeModeProvider);
 
     return MaterialApp.router(
       routerConfig: appRouter,
-      theme: isDarkMode ? AppTheme().getDarkTheme() : AppTheme().getTheme(),
+      theme: AppTheme().getTheme(),
+      darkTheme: AppTheme().getDarkTheme(),
+      themeMode: themeMode,
     );
   }
 }

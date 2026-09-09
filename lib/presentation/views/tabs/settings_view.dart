@@ -9,7 +9,11 @@ class SettingsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDarkMode = ref.watch(isDarkModeProvider);
+    final themeMode = ref.watch(themeModeProvider);
+    final platformBrightness = MediaQuery.platformBrightnessOf(context);
+    final isDarkMode = themeMode == ThemeMode.system
+        ? platformBrightness == Brightness.dark
+        : themeMode == ThemeMode.dark;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
@@ -17,8 +21,8 @@ class SettingsView extends ConsumerWidget {
         title: const Text('Dark mode'),
         secondary: Icon(isDarkMode ? Icons.dark_mode : Icons.light_mode),
         value: isDarkMode,
-        onChanged: (_) =>
-            ref.read(isDarkModeProvider.notifier).toggleDarkMode(),
+        onChanged: (value) =>
+            ref.read(themeModeProvider.notifier).setDarkMode(value),
       ),
     );
   }

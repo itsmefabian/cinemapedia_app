@@ -1,20 +1,30 @@
 import 'package:cinemapedia_app/presentation/providers/storage/local_storage_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DarkModeNotifier extends Notifier<bool> {
+class ThemeModeNotifier extends Notifier<ThemeMode> {
   @override
-  bool build() => false;
+  ThemeMode build() => ThemeMode.system;
 
-  Future<void> loadDarkMode() async {
-    state = await ref.read(localStorageRepositoryProvider).isDarkMode();
+  Future<void> loadThemeMode() async {
+    final isDarkMode = await ref
+        .read(localStorageRepositoryProvider)
+        .getDarkModePreference();
+
+    if (isDarkMode == null) return;
+
+    state = isDarkMode ? ThemeMode.dark : ThemeMode.light;
   }
 
-  Future<void> toggleDarkMode() async {
-    await ref.read(localStorageRepositoryProvider).toggleDarkMode();
-    state = !state;
+  Future<void> setDarkMode(bool isDarkMode) async {
+    await ref
+        .read(localStorageRepositoryProvider)
+        .setDarkModePreference(isDarkMode);
+
+    state = isDarkMode ? ThemeMode.dark : ThemeMode.light;
   }
 }
 
-final isDarkModeProvider = NotifierProvider<DarkModeNotifier, bool>(
-  DarkModeNotifier.new,
+final themeModeProvider = NotifierProvider<ThemeModeNotifier, ThemeMode>(
+  ThemeModeNotifier.new,
 );

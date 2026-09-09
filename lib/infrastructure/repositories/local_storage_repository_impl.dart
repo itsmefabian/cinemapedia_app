@@ -23,12 +23,12 @@ class LocalStorageRepositoryImpl extends LocalStorageRepository {
   }
 
   @override
-  Future<bool> isDarkMode() {
-    return datasource.isDarkMode();
+  Future<bool?> getDarkModePreference() {
+    return datasource.getDarkModePreference();
   }
 
   @override
-  Future<void> toggleDarkMode() {
-    return datasource.toggleDarkMode();
+  Future<void> setDarkModePreference(bool isDarkMode) {
+    return datasource.setDarkModePreference(isDarkMode);
   }
 }

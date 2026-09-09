@@ -6,7 +6,7 @@ class BottomNavigation extends StatelessWidget {
 
   const new({super.key, required this.navigationShell});
 
-  static const _branchByItemIndex = <int, int>{0: 0, 1: 1, 2: 2};
+  static const _branchByItemIndex = <int, int>{0: 0, 1: 1, 2: 2, 3: 3};
 
   void onItemTap(BuildContext context, int index) {
     final branchIndex = _branchByItemIndex[index];
@@ -26,6 +26,7 @@ class BottomNavigation extends StatelessWidget {
 
     return BottomNavigationBar(
       elevation: 0,
+      type: BottomNavigationBarType.fixed,
       currentIndex: currentItemIndex,
       onTap: (index) => onItemTap(context, index),
       items: [
@@ -37,6 +38,10 @@ class BottomNavigation extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.favorite_outlined),
           label: 'Favorites',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.settings_outlined),
+          label: 'Settings',
         ),
       ],
     );

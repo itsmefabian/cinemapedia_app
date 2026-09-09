@@ -76,4 +76,34 @@ class DriftDatasource extends LocalStorageDatasource {
           ),
         );
   }
+
+  Future<AppSettingsData> _getOrCreateSettings() async {
+    final settings = await database
+        .select(database.appSettings)
+        .getSingleOrNull();
+    if (settings != null) return settings;
+
+    final id = await database
+        .into(database.appSettings)
+        .insert(const AppSettingsCompanion());
+
+    return AppSettingsData(id: id, isDarkMode: false);
+  }
+
+  @override
+  Future<bool> isDarkMode() async {
+    final settings = await _getOrCreateSettings();
+    return settings.isDarkMode;
+  }
+
+  @override
+  Future<void> toggleDarkMode() async {
+    final settings = await _getOrCreateSettings();
+
+    await (database.update(
+      database.appSettings,
+    )..where((table) => table.id.equals(settings.id))).write(
+      AppSettingsCompanion(isDarkMode: drift.Value(!settings.isDarkMode)),
+    );
+  }
 }

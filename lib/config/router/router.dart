@@ -45,6 +45,15 @@ final appRouter = GoRouter(
             ),
           ],
         ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/settings',
+              name: SettingsView.name,
+              builder: (context, state) => const SettingsView(),
+            ),
+          ],
+        ),
       ],
     ),
   ],

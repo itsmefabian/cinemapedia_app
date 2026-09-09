@@ -15,7 +15,14 @@ class FavoritesMovies extends Table {
       real().named('vote_average').withDefault(const Constant(0.0))();
 }
 
-@DriftDatabase(tables: [FavoritesMovies])
+@DataClassName('AppSettingsData')
+class AppSettings extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  BoolColumn get isDarkMode =>
+      boolean().named('is_dark_mode').withDefault(const Constant(false))();
+}
+
+@DriftDatabase(tables: [FavoritesMovies, AppSettings])
 class AppDatabase extends _$AppDatabase {
   // After generating code, this class needs to define a `schemaVersion` getter
   // and a constructor telling drift where the database should be stored.
@@ -23,7 +30,17 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (Migrator m) => m.createAll(),
+    onUpgrade: (Migrator m, int from, int to) async {
+      if (from < 2) {
+        await m.createTable(appSettings);
+      }
+    },
+  );
 
   static QueryExecutor _openConnection() {
     return driftDatabase(

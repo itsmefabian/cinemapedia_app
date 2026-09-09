@@ -9,5 +9,6 @@ export 'actors/actors_by_movie_provider.dart';
 export 'search/search_movies_provider.dart';
 export 'storage/favorites_movies_provider.dart';
 export 'storage/is_favorite_movie_provider.dart';
+export 'storage/theme_mode_provider.dart';
 export 'videos/videos_repository_provider.dart';
 export 'videos/videos_by_movie_provider.dart';

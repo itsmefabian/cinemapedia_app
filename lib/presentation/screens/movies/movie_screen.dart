@@ -24,6 +24,7 @@ class _MovieScreenState extends ConsumerState<MovieScreen> {
     ref.read(movieInfoProvider.notifier).loadMovie(widget.movieId);
     ref.read(actorInfoProvider.notifier).getCastByMovie(widget.movieId);
     ref.read(videoInfoProvider.notifier).loadVideosByMovie(widget.movieId);
+    ref.read(similarMoviesProvider.notifier).loadSimilarMovies(widget.movieId);
   }
 
   @override
@@ -231,6 +232,7 @@ class _MovieDetails extends StatelessWidget {
         ),
         _ActorsByMovie(movieId: movie.id.toString()),
         TrailerFromMovie(movieId: movie.id.toString()),
+        _SimilarMovies(movieId: movie.id.toString()),
         const SizedBox(height: 50),
       ],
     );
@@ -299,6 +301,26 @@ class _ActorsByMovie extends ConsumerWidget {
         },
       ),
     );
+  }
+}
+
+class _SimilarMovies extends ConsumerWidget {
+  final String movieId;
+
+  const new({required this.movieId});
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final similarMoviesByMovie = ref.watch(similarMoviesProvider);
+    final similarMovies = similarMoviesByMovie[movieId];
+
+    if (similarMovies == null) {
+      return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+    }
+
+    if (similarMovies.isEmpty) return const SizedBox();
+
+    return HorizontalListView(movies: similarMovies, title: 'Similar movies');
   }
 }
 

@@ -12,3 +12,5 @@ export 'storage/is_favorite_movie_provider.dart';
 export 'storage/theme_mode_provider.dart';
 export 'videos/videos_repository_provider.dart';
 export 'videos/videos_by_movie_provider.dart';
+export 'reviews/reviews_repository_provider.dart';
+export 'reviews/reviews_by_movie_provider.dart';

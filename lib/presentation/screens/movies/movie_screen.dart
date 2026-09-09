@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia_app/config/const/assets.dart';
 import 'package:cinemapedia_app/domain/entities/movie.dart';
+import 'package:cinemapedia_app/domain/entities/review.dart';
 import 'package:cinemapedia_app/presentation/providers/providers.dart';
 import 'package:cinemapedia_app/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class _MovieScreenState extends ConsumerState<MovieScreen> {
     ref.read(actorInfoProvider.notifier).getCastByMovie(widget.movieId);
     ref.read(videoInfoProvider.notifier).loadVideosByMovie(widget.movieId);
     ref.read(similarMoviesProvider.notifier).loadSimilarMovies(widget.movieId);
+    ref.read(reviewInfoProvider.notifier).loadReviewsByMovie(widget.movieId);
   }
 
   @override
@@ -192,10 +194,7 @@ class _MovieDetails extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: movie.posterPath == Assets.noImagePath
-                    ? Image.asset(
-                        Assets.noImagePath,
-                        width: size.width * 0.3,
-                      )
+                    ? Image.asset(Assets.noImagePath, width: size.width * 0.3)
                     : Image.network(movie.posterPath, width: size.width * 0.3),
               ),
               const SizedBox(width: 10),
@@ -233,6 +232,7 @@ class _MovieDetails extends StatelessWidget {
         _ActorsByMovie(movieId: movie.id.toString()),
         TrailerFromMovie(movieId: movie.id.toString()),
         _SimilarMovies(movieId: movie.id.toString()),
+        _ReviewsByMovie(movieId: movie.id.toString()),
         const SizedBox(height: 50),
       ],
     );
@@ -321,6 +321,104 @@ class _SimilarMovies extends ConsumerWidget {
     if (similarMovies.isEmpty) return const SizedBox();
 
     return HorizontalListView(movies: similarMovies, title: 'Similar movies');
+  }
+}
+
+class _ReviewsByMovie extends ConsumerWidget {
+  final String movieId;
+
+  const new({required this.movieId});
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final reviewsByMovie = ref.watch(reviewInfoProvider);
+    final reviews = reviewsByMovie[movieId];
+
+    if (reviews == null) {
+      return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+    }
+
+    if (reviews.isEmpty) return const SizedBox();
+
+    final titleStyle = Theme.of(context).textTheme.titleLarge;
+
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Reviews', style: titleStyle),
+          const SizedBox(height: 10),
+          ...reviews.map((review) => _ReviewCard(review: review)),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReviewCard extends StatelessWidget {
+  final Review review;
+
+  const new({required this.review});
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyles = Theme.of(context).textTheme;
+    final colors = Theme.of(context).colorScheme;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: review.avatarPath != null
+                    ? NetworkImage(review.avatarPath!)
+                    : null,
+                child: review.avatarPath == null
+                    ? const Icon(Icons.person)
+                    : null,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(review.author, style: textStyles.titleSmall),
+                    if (review.rating != null)
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.star,
+                            size: 14,
+                            color: Colors.yellow.shade800,
+                          ),
+                          const SizedBox(width: 4),
+                          Text('${review.rating}', style: textStyles.bodySmall),
+                        ],
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            review.content,
+            maxLines: 6,
+            overflow: TextOverflow.ellipsis,
+            style: textStyles.bodyMedium,
+          ),
+        ],
+      ),
+    );
   }
 }
 
